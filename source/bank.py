@@ -4,16 +4,16 @@ import time
 class Bank:
 
     def __init__(self, user_id, balance=500, money_in_bank=0, owed_money=0):
-        self.__user_id = user_id
+        self._user_id = user_id
         self._balance = balance
-        self.__money_in_bank = money_in_bank
+        self._money_in_bank = money_in_bank
         self._owed_money = owed_money
 
     def bankrupt(self, start):
         end = time.time()
         if end - start > 432_000: # 5 days
             self._balance = 500
-            self.__money_in_bank = 0
+            self._money_in_bank = 0
             self._owed_money = 0
             return "You bankrupted because you owe money to the bank for more than 5 days. Your game restarts and starts from the beginning."
         return False
@@ -21,7 +21,7 @@ class Bank:
     def time_in_bank(self, start): # mix-in
         end = time.time()
         time_in_bank = end - start
-        result = ((time_in_bank/600000) * self.__money_in_bank) + self.__money_in_bank
+        result = ((time_in_bank/600000) * self._money_in_bank) + self._money_in_bank
         return result
 
     def deposit(self, amount, start_time=0, owe_money_start_time=0):
@@ -33,10 +33,10 @@ class Bank:
 
         if amount <= self._balance:
 
-            if self.__money_in_bank > 0:
-                self.__money_in_bank = self.time_in_bank(start_time)
+            if self._money_in_bank > 0:
+                self._money_in_bank = self.time_in_bank(start_time)
 
-            self.__money_in_bank += amount
+            self._money_in_bank += amount
             self._balance -= amount
 
             start = time.time()
@@ -47,13 +47,13 @@ class Bank:
     def withdraw(self, start, deposited=False, amount=0):
         def get_deposited_money():
             result = self.time_in_bank(start)
-            self.__money_in_bank = 0
+            self._money_in_bank = 0
             return result
 
         def get_from_deposited_money():
-            self.__money_in_bank = self.time_in_bank(start)
-            if self.__money_in_bank >= amount:
-                self.__money_in_bank -= amount
+            self._money_in_bank = self.time_in_bank(start)
+            if self._money_in_bank >= amount:
+                self._money_in_bank -= amount
                 return amount
             return "Not enough money in the bank"
 
@@ -88,5 +88,5 @@ class Bank:
         return withdraw_money()
 
     def __repr__(self):
-        return f"<@{self.__user_id}>\nBalance: ${self._balance:.2f}\nBank balance: ${self.__money_in_bank:.2f}\nOwes: ${self._owed_money:.2f}"
+        return f"<@{self._user_id}>\nBalance: ${self._balance:.2f}\nBank balance: ${self._money_in_bank:.2f}\nOwes: ${self._owed_money:.2f}"
 
