@@ -14,6 +14,25 @@ class TestBank(TestCase):
         self.assertEqual(0, self.bank._money_in_bank)
         self.assertEqual(0, self.bank._owed_money)
 
+    def test_successful_payback_of_what_you_owe(self):
+        self.bank._owed_money = 1
+        result = self.bank.payback()
+        self.assertEqual(0, self.bank._owed_money)
+        self.assertEqual(9_999, self.bank._balance)
+        self.assertEqual("You no longer owe the bank", result)
+
+    def test_unsuccessful_payback_you_might_like_to_withdraw_from_deposits(self):
+        self.bank._owed_money = 10000000000
+        self.bank._money_in_bank = 10
+        result = self.bank.payback()
+        self.assertEqual(f"You don't have enough money. You may want to withdraw from your deposits.", result)
+
+    def test_unsuccessful_payback(self):
+        self.bank._owed_money = 10000000000
+        self.bank._money_in_bank = 0
+        result = self.bank.payback()
+        self.assertEqual(f"You don't have enough money.", result)
+
     def test_unsuccessful_bankrupt(self):
         result = self.bank.bankrupt(time.time(), 0)
         self.assertEqual(False, result)
