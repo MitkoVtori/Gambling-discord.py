@@ -18,6 +18,13 @@ class Bank:
             return "You bankrupted because you owe money to the bank for more than 5 days. Your game restarts and starts from the beginning."
         return False
 
+    def payback(self):
+        if self._balance >= self._owed_money:
+            self._balance -= self._owed_money
+            self._owed_money = 0
+            return "You no longer owe the bank"
+        return f"You don't have enough money.{' You may want to withdraw from your deposits.' if self._money_in_bank > 0 else ''}"
+
     def time_in_bank(self, start): # mix-in
         end = time.time()
         time_in_bank = end - start
